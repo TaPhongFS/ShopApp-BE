@@ -9,7 +9,9 @@ import com.project.shopapp.components.LocalizationUtils;
 import com.project.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -77,13 +79,38 @@ public class UserController {
     }
 
     @PostMapping("/details")
-    public ResponseEntity<UserResponse> getUserDetails(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<UserResponse> getUserDetails(@RequestHeader("Authorization") String authorizationHeader) {
         try {
-            String extractedToken = token.substring(7); // Loại bỏ "Bearer " từ chuỗi token
+            String extractedToken = authorizationHeader.substring(7); // Loại bỏ "Bearer " từ chuỗi token
             User user = userService.getUserDetailsFromToken(extractedToken);
             return ResponseEntity.ok(UserResponse.fromUser(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PutMapping("/details/{userId}")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+//    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    public ResponseEntity<UserResponse> updateUserDetails(
+            @PathVariable Long userId,
+            @RequestBody UpdateUserDTO updatedUserDTO,
+            @RequestHeader("Authorization") String authorizationHeader
+    ) throws Exception{
+        String extractedToken = authorizationHeader.substring(7);
+        User user = userService.getUserDetailsFromToken(extractedToken);
+        // Ensure that the user making the request matches the user being updated
+        if (user.getId() != userId) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        User updatedUser = userService.updateUser(userId, updatedUserDTO);
+        return ResponseEntity.ok(UserResponse.fromUser(updatedUser));
+//        return ResponseEntity.ok().body(
+//                ResponseObject.builder()
+//                        .message("Update user detail successfully")
+//                        .data(UserResponse.fromUser(updatedUser))
+//                        .status(HttpStatus.OK)
+//                        .build()
+//        );
     }
 }

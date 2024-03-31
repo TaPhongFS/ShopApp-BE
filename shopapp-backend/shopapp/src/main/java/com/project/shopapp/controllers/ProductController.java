@@ -12,6 +12,8 @@ import com.project.shopapp.services.IProductService;
 import com.project.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +39,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("${api.prefix}/products")
 public class ProductController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final IProductService productService;
     private final LocalizationUtils localizationUtils;
 
@@ -151,14 +155,16 @@ public class ProductController {
     @GetMapping("")
     public ResponseEntity<ProductListResponse> getProducts(@RequestParam(defaultValue = "") String keyword,
                                                            @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
-                                                           @RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "1") int page,
                                                            @RequestParam(defaultValue = "10") int limit) {
         // Tạo Pageable từ thông tin trang và giới hạn
         PageRequest pageRequest = PageRequest.of(
-                page, limit,
+                (page - 1), limit,
 //                Sort.by("createdAt").descending()
                 Sort.by("id").ascending()
         );
+        logger.info(String.format("keyword = %s, category_id = %d, page = %d, limit = %d",
+                keyword, categoryId, page, limit));
         Page<ProductResponse> productPage = productService.getAllProducts(keyword, categoryId, pageRequest);
         // Lấy tổng số trang
         int totalPages = productPage.getTotalPages();
