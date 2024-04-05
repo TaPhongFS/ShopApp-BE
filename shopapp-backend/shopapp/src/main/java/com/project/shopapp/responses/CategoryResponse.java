@@ -24,7 +24,18 @@ public class CategoryResponse {
     @JsonProperty("errors")
     private List<String> errors;
 
-    @JsonProperty("category")
-    private Category category;
+    @JsonProperty("id")
+    private Long id;
+
+    @JsonProperty("name")
+    private String name;
+
+    public static CategoryResponse fromCategory(Category category) {
+        CategoryResponse categoryResponse = CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build();
+        return categoryResponse;
+    }
 }
 

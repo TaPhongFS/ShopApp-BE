@@ -8,6 +8,7 @@ import com.project.shopapp.models.Category;
 import com.project.shopapp.models.Product;
 import com.project.shopapp.models.ProductImage;
 import com.project.shopapp.repositories.CategoryRepository;
+import com.project.shopapp.repositories.OrderDetailRepository;
 import com.project.shopapp.repositories.ProductImageRepository;
 import com.project.shopapp.repositories.ProductRepository;
 import com.project.shopapp.responses.ProductResponse;
@@ -27,6 +28,7 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     @Override
     @Transactional
@@ -98,6 +100,7 @@ public class ProductService implements IProductService {
     @Transactional
     public void deleteProduct(long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
+        orderDetailRepository.deleteByProductId(id);
         optionalProduct.ifPresent(productRepository::delete);
     }
 

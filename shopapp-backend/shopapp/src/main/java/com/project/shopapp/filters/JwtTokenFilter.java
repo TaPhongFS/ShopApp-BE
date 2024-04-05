@@ -23,18 +23,19 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class JwtTokenFilter extends OncePerRequestFilter{
+public class JwtTokenFilter extends OncePerRequestFilter {
     @Value("${api.prefix}")
     private String apiPrefix;
     private final UserDetailsService userDetailsService;
     private final JwtTokenUtils jwtTokenUtil;
+
     @Override
-    protected void doFilterInternal(@NonNull  HttpServletRequest request,
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            if(isBypassToken(request)) {
+            if (isBypassToken(request)) {
                 filterChain.doFilter(request, response); //enable bypass
                 return;
             }
@@ -60,17 +61,17 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 }
             }
             filterChain.doFilter(request, response); //enable bypass
-        }catch (Exception e) {
+        } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         }
 
     }
-    private boolean isBypassToken(@NonNull  HttpServletRequest request) {
+
+    private boolean isBypassToken(@NonNull HttpServletRequest request) {
         final List<Pair<String, String>> bypassTokens = Arrays.asList(
                 Pair.of(String.format("%s/roles", apiPrefix), "GET"),
                 Pair.of(String.format("%s/products", apiPrefix), "GET"),
                 Pair.of(String.format("%s/healthcheck/health", apiPrefix), "GET"),
-                Pair.of(String.format("%s/categories", apiPrefix), "GET"),
                 Pair.of(String.format("%s/users/register", apiPrefix), "POST"),
                 Pair.of(String.format("%s/users/login", apiPrefix), "POST")
         );
@@ -78,6 +79,12 @@ public class JwtTokenFilter extends OncePerRequestFilter{
         String requestMethod = request.getMethod();
 
         if (requestPath.equals(String.format("%s/orders", apiPrefix))
+                && requestMethod.equals("GET")) {
+            // Allow access to %s/orders
+            return true;
+        }
+
+        if (requestPath.equals(String.format("%s/categories", apiPrefix))
                 && requestMethod.equals("GET")) {
             // Allow access to %s/orders
             return true;

@@ -2,8 +2,11 @@ package com.project.shopapp.services;
 
 import com.project.shopapp.dtos.CategoryDTO;
 import com.project.shopapp.models.Category;
+import com.project.shopapp.models.Order;
 import com.project.shopapp.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,5 +52,10 @@ public class CategoryService implements ICategoryService {
     public void deleteCategory(long id) {
         //xóa xong
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Category> getCategoryByKeyword(String keyword, Pageable pageable) {
+        return categoryRepository.findByKeyword(keyword, pageable);
     }
 }
