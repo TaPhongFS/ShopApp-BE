@@ -89,7 +89,9 @@ public class ProductService implements IProductService {
             existingProduct.setCategory(existingCategory);
             existingProduct.setPrice(productDTO.getPrice());
             existingProduct.setDescription(productDTO.getDescription());
-            existingProduct.setThumbnail(productDTO.getThumbnail());
+            if(productDTO.getThumbnail() != "" && productDTO.getThumbnail() != null){
+                existingProduct.setThumbnail(productDTO.getThumbnail());
+            }
             return productRepository.save(existingProduct);
         }
         return null;
