@@ -51,7 +51,10 @@ public class OrderController {
     //GET http://localhost:8088/api/v1/orders/user/4
     public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userId) {
         try {
-            List<Order> orders = orderService.findByUserId(userId);
+            List<OrderResponse> orders = orderService.findByUserId(userId)
+                    .stream()
+                    .map(OrderResponse::fromOrder)
+                    .toList();
             return ResponseEntity.ok(orders);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
