@@ -75,7 +75,6 @@ public class WebSecurityConfig {
                             .requestMatchers(POST,
                                     String.format("%s/products**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
-
                             .requestMatchers(PUT,
                                     String.format("%s/products/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
