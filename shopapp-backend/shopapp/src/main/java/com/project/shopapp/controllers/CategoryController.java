@@ -46,8 +46,7 @@ public class CategoryController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Category>> getAllCategory(@RequestParam("page") int page,
-                                                         @RequestParam("limit") int limit) {
+    public ResponseEntity<List<Category>> getAllCategory() {
         List<Category> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
@@ -69,7 +68,6 @@ public class CategoryController {
     }
 
     @GetMapping("/get-category-by-keyword")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryListResponse> getCategoryByKeyword(
             @RequestParam(defaultValue = "", required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,

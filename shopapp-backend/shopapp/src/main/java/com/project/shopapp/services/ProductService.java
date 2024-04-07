@@ -42,7 +42,7 @@ public class ProductService implements IProductService {
         Product newProduct = Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
-                .thumbnail(productDTO.getThumbnail())
+                .thumbnail(productDTO.getThumbnail() == "" ? null : productDTO.getThumbnail())
                 .description(productDTO.getDescription())
                 .category(existingCategory)
                 .build();
@@ -89,7 +89,7 @@ public class ProductService implements IProductService {
             existingProduct.setCategory(existingCategory);
             existingProduct.setPrice(productDTO.getPrice());
             existingProduct.setDescription(productDTO.getDescription());
-            if(productDTO.getThumbnail() != "" && productDTO.getThumbnail() != null){
+            if (productDTO.getThumbnail() != "" && productDTO.getThumbnail() != null) {
                 existingProduct.setThumbnail(productDTO.getThumbnail());
             }
             return productRepository.save(existingProduct);
