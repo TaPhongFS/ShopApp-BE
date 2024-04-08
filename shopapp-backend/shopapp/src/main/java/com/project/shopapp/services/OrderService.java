@@ -104,7 +104,8 @@ public class OrderService implements IOrderService {
                 new DataNotFoundException("Cannot find user with id: " + id));
         // Tạo một luồng bảng ánh xạ riêng để kiểm soát việc ánh xạ
         modelMapper.typeMap(OrderDTO.class, Order.class)
-                .addMappings(mapper -> mapper.skip(Order::setId));
+                .addMappings(mapper -> mapper.skip(Order::setId))
+                .addMappings(mapper -> mapper.skip(Order::setOrderDate));
         // Cập nhật các trường của đơn hàng từ orderDTO
         modelMapper.map(orderDTO, order);
         order.setUser(existingUser);

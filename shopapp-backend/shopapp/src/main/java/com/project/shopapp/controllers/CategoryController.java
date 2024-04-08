@@ -68,6 +68,7 @@ public class CategoryController {
     }
 
     @GetMapping("/get-category-by-keyword")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryListResponse> getCategoryByKeyword(
             @RequestParam(defaultValue = "", required = false) String keyword,
             @RequestParam(defaultValue = "1") int page,
