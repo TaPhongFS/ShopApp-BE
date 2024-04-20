@@ -109,6 +109,8 @@ public class WebSecurityConfig {
 
                             .requestMatchers(GET,
                                     String.format("%s/healthcheck/**", apiPrefix)).permitAll()
+                            .requestMatchers(GET,
+                                    String.format("%s/users/**", apiPrefix)).permitAll()
 
                             .anyRequest().authenticated();
 

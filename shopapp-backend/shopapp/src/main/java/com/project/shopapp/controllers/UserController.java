@@ -78,7 +78,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/details")
+    @GetMapping("/details")
     public ResponseEntity<UserResponse> getUserDetails(@RequestHeader("Authorization") String authorizationHeader) {
         try {
             String extractedToken = authorizationHeader.substring(7); // Loại bỏ "Bearer " từ chuỗi token
