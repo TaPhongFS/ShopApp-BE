@@ -103,6 +103,7 @@ public class ProductService implements IProductService {
     public void deleteProduct(long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         orderDetailRepository.deleteByProductId(id);
+        productImageRepository.deleteByProductId(id);
         optionalProduct.ifPresent(productRepository::delete);
     }
 
